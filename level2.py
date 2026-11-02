@@ -5,7 +5,7 @@ import os
 
 # ============================================================
 # JLPT N2 MASTER
-# Created by RIMAL NABIN
+# Created by RIMAL NABIN & PARIYAR ROHAN
 # Excel + AI Version
 # ============================================================
 
@@ -159,7 +159,7 @@ if "ai_messages" not in st.session_state:
 st.sidebar.title("🇯🇵 JLPT N2 MASTER")
 
 st.sidebar.write("Created by")
-st.sidebar.write("**RIMAL NABIN**")
+st.sidebar.write("**RIMAL NABIN & PARIYAR ROHAN**")
 
 st.sidebar.markdown("---")
 
