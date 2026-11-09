@@ -516,8 +516,9 @@ elif page == "🧠 Training":
             "Recommended study time: 30–45 minutes."
         )
 
+    
     # --------------------------------------------------------
-    # QUIZ
+    # QUIZ - RANDOM OPTIONS
     # --------------------------------------------------------
 
     with tab2:
@@ -526,36 +527,36 @@ elif page == "🧠 Training":
 
         if len(QUESTIONS) == 0:
 
-            st.warning(
-                "No questions found in your Excel file."
-            )
+            st.warning("No questions found in your Excel file.")
 
         else:
 
-            # Pick a question
             question_index = (
-                st.session_state.quiz_index
-                % len(QUESTIONS)
+                st.session_state.quiz_index % len(QUESTIONS)
             )
 
-            question = QUESTIONS.iloc[
-                question_index
-            ]
+            question = QUESTIONS.iloc[question_index]
 
-            st.markdown(
-                f"### Question {question_index + 1}"
-            )
+            st.markdown(f"### Question {question_index + 1}")
 
-            st.write(
-                question["question"]
-            )
+            st.write(question["question"])
 
-            options = [
-                str(question["option1"]),
-                str(question["option2"]),
-                str(question["option3"]),
-                str(question["option4"])
-            ]
+            # Randomize answer choices once per question
+            shuffle_key = f"options_{question_index}"
+
+            if shuffle_key not in st.session_state:
+                options = [
+                    str(question["option1"]),
+                    str(question["option2"]),
+                    str(question["option3"]),
+                    str(question["option4"])
+                ]
+
+                random.shuffle(options)
+
+                st.session_state[shuffle_key] = options
+
+            options = st.session_state[shuffle_key]
 
             answer = st.radio(
                 "Choose your answer:",
@@ -567,38 +568,26 @@ elif page == "🧠 Training":
 
             with col1:
 
-                if st.button(
-                    "✅ Check Answer",
-                    key=f"check_{question_index}"
-                ):
+                if st.button("✅ Check Answer", key=f"check_{question_index}"):
 
-                    correct = str(
-                        question["answer"]
-                    )
+                    correct = str(question["answer"]).strip()
 
                     st.session_state.answered += 1
 
-                    if answer == correct:
+                    if answer.strip() == correct:
 
-                        st.success(
-                            "🎉 Correct!"
-                        )
-
+                        st.success("🎉 Correct!")
                         st.session_state.score += 1
 
                     else:
 
                         st.error(
-                            f"❌ Incorrect!\n\n"
-                            f"Correct answer: {correct}"
+                            f"❌ Incorrect!\n\nCorrect answer: {correct}"
                         )
 
             with col2:
 
-                if st.button(
-                    "➡️ Next Question",
-                    key=f"next_{question_index}"
-                ):
+                if st.button("➡️ Next Question", key=f"next_{question_index}"):
 
                     st.session_state.quiz_index += 1
 
@@ -606,10 +595,8 @@ elif page == "🧠 Training":
 
             st.markdown("---")
 
-            st.write(
-                f"🏆 Score: "
-                f"**{st.session_state.score}**"
-            )
+            st.write(f"🏆 Score: **{st.session_state.score}**")
+
 
     # --------------------------------------------------------
     # MOCK TEST
